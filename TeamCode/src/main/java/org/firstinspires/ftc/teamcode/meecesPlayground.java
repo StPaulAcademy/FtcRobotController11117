@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -48,8 +49,8 @@ public class meecesPlayground extends LinearOpMode {
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
-        //left.setDirection(DcMotor.Direction.FORWARD);
-        //right.setDirection(DcMotor.Direction.FORWARD);
+        frontLeftMotor.setDirection(DcMotor.Direction.REVERSE);
+        backRightMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -91,23 +92,34 @@ public class meecesPlayground extends LinearOpMode {
             // Send calculated power to wheels
 
             negHorizontal = pivot + (-vertical - horizontal);
-            posHorizontal = pivot + (-vertical + horizontal);
+            posHorizontal = -pivot + (-vertical + horizontal);
+
+
 
             if (gamepad1.left_bumper){
-                negHorizontal = negHorizontal/2;
-                posHorizontal = posHorizontal/2;
+                frontLeftMotor.setPower((-pivot + (-vertical - horizontal))/2);
+                frontRightMotor.setPower((pivot + (-vertical + horizontal))/2);
+                backLeftMotor.setPower((-pivot + (-vertical + horizontal))/2);
+                backRightMotor.setPower((pivot + (-vertical - horizontal))/2);
+            }
+
+            if (gamepad1.right_bumper){
+                frontLeftMotor.setPower((-pivot + (-vertical - horizontal))/8);
+                frontRightMotor.setPower((pivot + (-vertical + horizontal))/8);
+                backLeftMotor.setPower((-pivot + (-vertical + horizontal))/8);
+                backRightMotor.setPower((pivot + (-vertical - horizontal))/8);
             }
 
 
-            frontLeftMotor.setPower(negHorizontal);
-            frontRightMotor.setPower(posHorizontal);
-            backLeftMotor.setPower(posHorizontal);
-            backRightMotor.setPower(negHorizontal);
+            frontLeftMotor.setPower(-pivot + (-vertical - horizontal));
+            frontRightMotor.setPower(pivot + (-vertical + horizontal));
+            backLeftMotor.setPower(-pivot + (-vertical + horizontal));
+            backRightMotor.setPower(pivot + (-vertical - horizontal));
 
-            frontLeftMotorTel = negHorizontal;
-            frontRightMotorTel = posHorizontal;
-            backLeftMotorTel = posHorizontal;
-            backRightMotorTel = negHorizontal;
+            frontLeftMotorTel = -pivot + (-vertical - horizontal);
+            frontRightMotorTel = pivot + (-vertical + horizontal);
+            backLeftMotorTel = -pivot + (-vertical + horizontal);
+            backRightMotorTel = pivot + (-vertical - horizontal);
 
 
 
