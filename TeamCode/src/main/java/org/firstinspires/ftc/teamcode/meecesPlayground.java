@@ -80,9 +80,9 @@ public class meecesPlayground extends LinearOpMode {
             double leftStickY = -gamepad1.left_stick_y;
             double leftStickX = gamepad1.left_stick_x;
             double rightStickX = gamepad1.right_stick_x;
-            vertical  = Range.clip(leftStickY, -1.0, 1.0) ;
-            horizontal = Range.clip(leftStickX, -1.0, 1.0) ;
-            pivot = Range.clip(rightStickX, -1.0, 1.0) ;
+            vertical  = Range.clip(leftStickY, -0.5, 0.5) ;
+            horizontal = Range.clip(leftStickX, -0.5, 0.5) ;
+            pivot = Range.clip(rightStickX, -0.5, 0.5) ;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
