@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -23,7 +22,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="meecesPlayground", group="Linear OpMode")
 //@Disabled
-public class meecesPlayground extends LinearOpMode {
+public class meecesPlaygroundDONOTCHANGE extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -65,12 +64,12 @@ public class meecesPlayground extends LinearOpMode {
             double vertical;
             double horizontal;
             double pivot;
-            double frontLeftMotorTel;
-            double frontRightMotorTel;
-            double backLeftMotorTel;
-            double backRightMotorTel;
-            double negHorizontal;
-            double posHorizontal;
+            double frontLeftMotorPower;
+            double frontRightMotorPower;
+            double backLeftMotorPower;
+            double backRightMotorPower;
+            //double negHorizontal;
+            //double posHorizontal;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -91,41 +90,41 @@ public class meecesPlayground extends LinearOpMode {
 
             // Send calculated power to wheels
 
-            negHorizontal = pivot + (-vertical - horizontal);
-            posHorizontal = -pivot + (-vertical + horizontal);
+            //negHorizontal = pivot + (-vertical - horizontal);
+            //posHorizontal = -pivot + (-vertical + horizontal);
 
-
+            frontLeftMotorPower = -pivot + (-vertical - horizontal);
+            frontRightMotorPower = pivot + (-vertical + horizontal);
+            backLeftMotorPower = -pivot + (-vertical + horizontal);
+            backRightMotorPower = pivot + (-vertical - horizontal);
 
             if (gamepad1.left_bumper){
-                frontLeftMotor.setPower((-pivot + (-vertical - horizontal))/2);
-                frontRightMotor.setPower((pivot + (-vertical + horizontal))/2);
-                backLeftMotor.setPower((-pivot + (-vertical + horizontal))/2);
-                backRightMotor.setPower((pivot + (-vertical - horizontal))/2);
+                frontLeftMotorPower = frontLeftMotorPower/2;
+                frontRightMotorPower = frontRightMotorPower/2;
+                backLeftMotorPower = backLeftMotorPower/2;
+                backRightMotorPower = backRightMotorPower/2;
             }
 
             if (gamepad1.right_bumper){
-                frontLeftMotor.setPower((-pivot + (-vertical - horizontal))/8);
-                frontRightMotor.setPower((pivot + (-vertical + horizontal))/8);
-                backLeftMotor.setPower((-pivot + (-vertical + horizontal))/8);
-                backRightMotor.setPower((pivot + (-vertical - horizontal))/8);
+                frontLeftMotorPower = frontLeftMotorPower/2;
+                frontRightMotorPower = frontRightMotorPower/2;
+                backLeftMotorPower = backLeftMotorPower/2;
+                backRightMotorPower = backRightMotorPower/2;
             }
 
 
-            frontLeftMotor.setPower(-pivot + (-vertical - horizontal));
-            frontRightMotor.setPower(pivot + (-vertical + horizontal));
-            backLeftMotor.setPower(-pivot + (-vertical + horizontal));
-            backRightMotor.setPower(pivot + (-vertical - horizontal));
+            frontLeftMotor.setPower(frontLeftMotorPower);
+            frontRightMotor.setPower(frontRightMotorPower);
+            backLeftMotor.setPower(backLeftMotorPower);
+            backRightMotor.setPower(backRightMotorPower);
 
-            frontLeftMotorTel = -pivot + (-vertical - horizontal);
-            frontRightMotorTel = pivot + (-vertical + horizontal);
-            backLeftMotorTel = -pivot + (-vertical + horizontal);
-            backRightMotorTel = pivot + (-vertical - horizontal);
+
 
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "frontLeftMotor (%.2f), frontRightMotor (%.2f), backLeftMotor (%.2f), backRightMotor (%.2f)", frontLeftMotorTel, frontRightMotorTel, backLeftMotorTel, backRightMotorTel);
+            telemetry.addData("Motors", "frontLeftMotor (%.2f), frontRightMotor (%.2f), backLeftMotor (%.2f), backRightMotor (%.2f)", frontLeftMotorPower, frontRightMotorPower, backLeftMotorPower, backRightMotorPower);
             telemetry.addData("Meece", "Playground lol Blue Smurf Cat go BRRRRRRRR©™ WE LIVE WE LAUGH WE LIE YEAH AUTONOMICE WOOOOOOOOO");
             telemetry.update();
         }
