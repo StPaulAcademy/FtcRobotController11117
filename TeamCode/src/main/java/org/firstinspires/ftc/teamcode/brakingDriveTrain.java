@@ -20,9 +20,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="meecesPlayground", group="Linear OpMode")
+@TeleOp(name="zeroPowerBehaviourTest", group="Linear OpMode")
 //@Disabled
-public class meecesPlaygroundDONOTCHANGE extends LinearOpMode {
+public class brakingDriveTrain extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -119,14 +119,28 @@ public class meecesPlaygroundDONOTCHANGE extends LinearOpMode {
             backRightMotor.setPower(backRightMotorPower);
 
 
-
-
-
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "frontLeftMotor (%.2f), frontRightMotor (%.2f), backLeftMotor (%.2f), backRightMotor (%.2f)", frontLeftMotorPower, frontRightMotorPower, backLeftMotorPower, backRightMotorPower);
-            telemetry.addData("Meece", "Playground lol Blue Smurf Cat go BRRRRRRRR©™ WE LIVE WE LAUGH WE LIE YEAH AUTONOMICE WOOOOOOOOO");
             telemetry.update();
+
+            while (leftStickX == 0 && leftStickY == 0 && rightStickX == 0){
+                frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+                telemetry.addData("Status", "Run Time: " + runtime.toString());
+                telemetry.addLine("Braking");
+                telemetry.update();
+                if (gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0){
+                    break;
+                }
+                if(frontLeftMotor.getPower() == 0 && frontRightMotor.getPower() == 0 && backLeftMotor.getPower() == 0 && backRightMotor.getPower() == 0){
+                    break;
+                }
+
+
+            }
         }
     }
 }

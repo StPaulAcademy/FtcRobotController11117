@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -21,9 +21,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="zeroPowerBehaviourTest", group="Linear OpMode")
+@TeleOp(name="liftAndDriveTrain", group="Linear OpMode")
 //@Disabled
-public class zeroPowerBehaviourTest extends LinearOpMode {
+public class liftAndDriveTrain extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -31,7 +31,9 @@ public class zeroPowerBehaviourTest extends LinearOpMode {
     private DcMotor frontRightMotor = null;
     private DcMotor backRightMotor = null;
     private DcMotor backLeftMotor = null;
+    private DcMotor liftMotor = null;
 
+    private Servo droneLauncher = null;
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -44,7 +46,8 @@ public class zeroPowerBehaviourTest extends LinearOpMode {
         frontRightMotor  = hardwareMap.get(DcMotor.class, "frontRightMotor");
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
-
+        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
+        droneLauncher = hardwareMap.get(Servo.class, "droneLauncher");
 
         // To drive forward, most robots need the motor on one side to be reversed, because the axles point in opposite directions.
         // Pushing the left stick forward MUST make robot go forward. So adjust these two lines based on your first test drive.
@@ -69,6 +72,7 @@ public class zeroPowerBehaviourTest extends LinearOpMode {
             double frontRightMotorPower;
             double backLeftMotorPower;
             double backRightMotorPower;
+            double liftPower;
             //double negHorizontal;
             //double posHorizontal;
 
@@ -80,9 +84,11 @@ public class zeroPowerBehaviourTest extends LinearOpMode {
             double leftStickY = -gamepad1.left_stick_y;
             double leftStickX = gamepad1.left_stick_x;
             double rightStickX = gamepad1.right_stick_x;
+            double leftStickY2 = -gamepad2.left_stick_y;
             vertical  = Range.clip(leftStickY, -0.5, 0.5) ;
             horizontal = Range.clip(leftStickX, -0.5, 0.5) ;
             pivot = Range.clip(rightStickX, -0.5, 0.5) ;
+            liftPower = Range.clip(leftStickY2, -1, 1);
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
@@ -114,15 +120,23 @@ public class zeroPowerBehaviourTest extends LinearOpMode {
             }
 
 
+
+
             frontLeftMotor.setPower(frontLeftMotorPower);
             frontRightMotor.setPower(frontRightMotorPower);
             backLeftMotor.setPower(backLeftMotorPower);
             backRightMotor.setPower(backRightMotorPower);
+            liftMotor.setPower(2*liftPower);
+
+            if (gamepad2.x){
+                droneLauncher.setPosition(1);
+            }
 
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "frontLeftMotor (%.2f), frontRightMotor (%.2f), backLeftMotor (%.2f), backRightMotor (%.2f)", frontLeftMotorPower, frontRightMotorPower, backLeftMotorPower, backRightMotorPower);
+            telemetry.addData("Lift", "%.2f", liftPower);
             telemetry.update();
 
             while (leftStickX == 0 && leftStickY == 0 && rightStickX == 0){
@@ -130,15 +144,18 @@ public class zeroPowerBehaviourTest extends LinearOpMode {
                 frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+                liftMotor.setPower(-gamepad2.left_stick_x);
                 telemetry.addData("Status", "Run Time: " + runtime.toString());
                 telemetry.addLine("Braking");
+                telemetry.addData("Lift", "%.2f", liftPower);
                 telemetry.update();
                 if (gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x != 0){
                     break;
                 }
                 if(frontLeftMotor.getPower() == 0 && frontRightMotor.getPower() == 0 && backLeftMotor.getPower() == 0 && backRightMotor.getPower() == 0){
                     break;
-                }
+                 }
 
 
             }
