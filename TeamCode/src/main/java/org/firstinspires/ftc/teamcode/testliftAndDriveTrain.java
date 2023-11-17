@@ -21,9 +21,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@TeleOp(name="liftAndDriveTrain", group="Linear OpMode")
+@TeleOp(name="liftAndDriveTrain2", group="Linear OpMode")
 //@Disabled
-public class liftAndDriveTrain extends LinearOpMode {
+public class testliftAndDriveTrain extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -131,7 +131,7 @@ public class liftAndDriveTrain extends LinearOpMode {
             backLeftMotor.setPower(backLeftMotorPower);
             backRightMotor.setPower(backRightMotorPower);
             liftMotor.setPower(2*liftPower);
-            pixelMover.setPosition(gamepad2.right_stick_x);
+            pixelMover.setPosition(gamepad2.right_stick_y);
 
             if (gamepad2.x){
                 droneLauncher.setPosition(1);
@@ -168,7 +168,7 @@ public class liftAndDriveTrain extends LinearOpMode {
                 }
                 if(frontLeftMotor.getPower() == 0 && frontRightMotor.getPower() == 0 && backLeftMotor.getPower() == 0 && backRightMotor.getPower() == 0){
                     break;
-                 }
+                }
 
 
             }
