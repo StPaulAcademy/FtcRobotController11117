@@ -76,13 +76,27 @@ public class SensorHuskyLens extends LinearOpMode {
              * Returns an empty array if no objects are seen.
              */
             HuskyLens.Block[] blocks = huskyLens.blocks();
-            telemetry.addData("Block count", blocks.length);
-            for (int i = 0; i < blocks.length; i++) {
-                telemetry.addData("Block", blocks[i].x);
-                //*if x < 100 = 1. If x = 100-200 = 2. If x > 200.
-            }
+            telemetry.addData("Object:ID1", blocks.length);
+            for(int i = 0; i < blocks.length; i++) {
+                telemetry.addData("Object:ID2", blocks[i].x);
+                if (blocks[i].x < 100) {
+                    telemetry.addLine("Left");
 
-            telemetry.update();
+                } else if (blocks[i].x < 200) {
+                    telemetry.addLine("Center");
+
+                } else {
+                    telemetry.addLine("Right");
+                }
+            }
+//            for(int i = 100; i < blocks.length; i++) {
+//                telemetry.addData("Object:ID2", blocks[i].x);
+//                for (int w = 200; w < blocks.length; w++)
+//                    //*if x < 100 = 1. If x = 100-200 = 2. If x > 200.
+//
+//                    telemetry.update();
+//                }
+//            }
         }
     }
 }
