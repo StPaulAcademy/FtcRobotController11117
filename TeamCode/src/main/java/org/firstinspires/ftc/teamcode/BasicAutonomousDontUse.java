@@ -17,6 +17,8 @@ public class BasicAutonomousDontUse extends LinearOpMode {
 
     private DcMotor frontLeftMotor = null;
     private DcMotor frontRightMotor = null;
+    private DcMotor backLeftMotor = null;
+    private DcMotor backRightMotor = null;
     private final int READ_PERIOD = 1;
     static final double     COUNTS_PER_MOTOR    = 537.7 ;    // eg: GoBilda Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // No External Gearing.
@@ -34,6 +36,8 @@ public class BasicAutonomousDontUse extends LinearOpMode {
         // Initialize the motors
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
+        backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         HuskyLens huskyLens = hardwareMap.get(HuskyLens.class, "huskylens");
         Deadline rateLimit = new Deadline(READ_PERIOD, TimeUnit.SECONDS);
         rateLimit.expire();
@@ -46,12 +50,16 @@ public class BasicAutonomousDontUse extends LinearOpMode {
         //Resets Encoder
         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //Sets mode to encoder
+        //Sets mode to encod
+        //
+        // er
         frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
+        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         /*
          * All algorithms, except for LINE_TRACKING, return a list of Blocks where a
@@ -65,21 +73,36 @@ public class BasicAutonomousDontUse extends LinearOpMode {
         rateLimit.reset();
         HuskyLens.Block[] blocks = huskyLens.blocks();
         for(int i = 0; i < blocks.length; i++) {
-            telemetry.addData("Object:ID1", blocks[i].x);
+            telemetry.addData("object:ID1", blocks[i].x);
             if (blocks[i].x < 100) {
                 telemetry.addLine("Left");
                 husky = "left";
-                // Put code to drive to the tape
+                encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+                telemetry.addData("Path", "Complete");
+                telemetry.update();
+                sleep(1000);  // pause to display final telemetry message.
 
             } else if (blocks[i].x < 200) {
                 telemetry.addLine("Center");
                 husky = "center";
-                // Put drive code
+                encoderDrive(DRIVE_SPEED,  10,  10, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                encoderDrive(TURN_SPEED,   200, 200, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                encoderDrive(DRIVE_SPEED, -5, -5, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+                telemetry.addData("Path", "Complete");
+                telemetry.update();
+                sleep(1000);  // pause to display final telemetry message.
 
             } else {
                 telemetry.addLine("Right");
                 husky = "right";
-                // Put drive code
+                encoderDrive(DRIVE_SPEED,  200,  200, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                encoderDrive(TURN_SPEED,   10, -10, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
+                encoderDrive(DRIVE_SPEED, -200, -200, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+                telemetry.addData("Path", "Complete");
+                telemetry.update();
+                sleep(1000);  // pause to display final telemetry message.
             }
         }
 
