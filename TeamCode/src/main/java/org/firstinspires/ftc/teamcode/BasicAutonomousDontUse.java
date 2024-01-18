@@ -76,7 +76,7 @@ public class BasicAutonomousDontUse extends LinearOpMode {
             if (blocks[i].x < 100) {
                 telemetry.addLine("Left");
                 husky = "left";
-                encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                encoderDrive(DRIVE_SPEED,  -48,  -48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
                 encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
                 telemetry.addData("Path", "Complete");
@@ -86,7 +86,7 @@ public class BasicAutonomousDontUse extends LinearOpMode {
             } else if (blocks[i].x < 200) {
                 telemetry.addLine("Center");
                 husky = "center";
-                encoderDrive(DRIVE_SPEED,  10,  10, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+                encoderDrive(DRIVE_SPEED,  -10000000,  -10000000, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
                 encoderDrive(TURN_SPEED,   200, 200, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
                 encoderDrive(DRIVE_SPEED, -5, -5, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
                 telemetry.addData("Path", "Complete");
@@ -118,7 +118,7 @@ public class BasicAutonomousDontUse extends LinearOpMode {
         // Wait for the start button to be pressed
         waitForStart();
 
-        encoderDrive(DRIVE_SPEED, 10, 10, 5);
+        encoderDrive(DRIVE_SPEED, 24, 24, 30);
 /*
         // Move forward for 3 seconds
         frontLeftMotor.setPower(0.5);  // Set the left motor power to half speed forward
@@ -135,30 +135,34 @@ public class BasicAutonomousDontUse extends LinearOpMode {
                              double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
+        telemetry.addData("OpMode1", opModeIsActive());
+        telemetry.update();
 
         // Ensure that the OpMode is still active
         if (opModeIsActive()) {
+            telemetry.addData("OpMode2", opModeIsActive());
+            telemetry.update();
 
             // Determine new target position, and pass to motor controller
             newLeftTarget = frontLeftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             newRightTarget = frontRightMotor.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
             frontLeftMotor.setTargetPosition(newLeftTarget);
             frontRightMotor.setTargetPosition(newRightTarget);
-            backRightMotor.setTargetPosition(newRightTarget);
-            backLeftMotor.setTargetPosition(newRightTarget);
+            //backRightMotor.setTargetPosition(newRightTarget);
+            //backLeftMotor.setTargetPosition(newLeftTarget);
 
             // Turn On RUN_TO_POSITION
             frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
             frontLeftMotor.setPower(Math.abs(speed));
             frontRightMotor.setPower(Math.abs(speed));
-            backLeftMotor.setPower(Math.abs(speed));
-            backRightMotor.setPower(Math.abs(speed));
+            //backLeftMotor.setPower(Math.abs(speed));
+            //backRightMotor.setPower(Math.abs(speed));
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -168,7 +172,7 @@ public class BasicAutonomousDontUse extends LinearOpMode {
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (frontLeftMotor.isBusy() && frontRightMotor.isBusy() && backRightMotor.isBusy() && backLeftMotor.isBusy())) {
+                    (frontLeftMotor.isBusy() || frontRightMotor.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Running to",  " %7d :%7d", newLeftTarget,  newRightTarget);
